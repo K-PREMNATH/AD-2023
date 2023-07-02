@@ -2,8 +2,11 @@ package com.main;
 
 import com.db.IItem;
 import com.db.impl.Item;
+import com.db.impl.User;
 import com.dto.req.CreateUpdateItem;
+import com.dto.req.SystemUserReq;
 import com.dto.res.GeneralResponse;
+import util.EncryptionUtil;
 
 /*
  */
@@ -14,10 +17,23 @@ import com.dto.res.GeneralResponse;
  */
 public class PosSystem {
     public static void main(String[] args) {
-        System.out.println("Hello");
-        IItem iItem = new Item();
-        CreateUpdateItem createItem = new CreateUpdateItem(0,"Orange Soda","","ORGSDAD",1,1,20.56);
-        GeneralResponse response = iItem.inserUpdateItem(createItem);
-        System.out.println(response.toString());
+        User user = new User();
+        SystemUserReq systemUserReq = new SystemUserReq();
+        systemUserReq.setUserId(0);
+        systemUserReq.setFirstName("Sumudu");
+        systemUserReq.setLastName("Ghomes");
+        systemUserReq.setEmailAddress("sumudu@test.com");
+        systemUserReq.setMobileNo("0771234567");
+        systemUserReq.setUsername("sumudu");
+        systemUserReq.setPassword("12345678");
+        
+        GeneralResponse generalResponse = user.createNewUser(systemUserReq);
+        System.out.println("createNewUser-response---------->"+generalResponse.toString());
+        
+        
+        GeneralResponse loginResponse = user.loginUser("sumudu","12345678");
+        System.out.println("loginUser-response---------->"+loginResponse.toString());
+
+       
     }
 }

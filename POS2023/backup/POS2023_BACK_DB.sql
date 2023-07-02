@@ -62,7 +62,7 @@ CREATE TABLE `item` (
   KEY `item_system_user_USER_ID_fk` (`CREATED_BY`),
   CONSTRAINT `item_category_CATEGORY_ID_fk` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `item_system_user_USER_ID_fk` FOREIGN KEY (`CREATED_BY`) REFERENCES `system_user` (`USER_ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'pepsi','','PP1','2023-06-25 09:55:27',1,1),(2,'Orange Soda','','ORGSDA','2023-06-25 10:34:20',1,1),(3,'Orange Soda','','ORGSDAD','2023-06-25 10:36:50',1,1),(4,'Milo','desc','MILO','2023-07-02 06:37:23',1,1);
+INSERT INTO `item` VALUES (1,'pepsi','','PP1','2023-06-25 09:55:27',1,1),(2,'Orange Soda','','ORGSDA','2023-06-25 10:34:20',1,1),(3,'Orange Soda','','ORGSDAD','2023-06-25 10:36:50',1,1),(4,'Milo','desc','MILO','2023-07-02 06:37:23',1,1),(5,'A','','101','2023-07-02 07:48:20',1,1);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +93,7 @@ CREATE TABLE `item_rate` (
   KEY `item_rate_system_user_USER_ID_fk` (`CREATED_BY`),
   CONSTRAINT `item_rate_item_ITEM_ID_fk` FOREIGN KEY (`ITEM_ID`) REFERENCES `item` (`ITEM_ID`),
   CONSTRAINT `item_rate_system_user_USER_ID_fk` FOREIGN KEY (`CREATED_BY`) REFERENCES `system_user` (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `item_rate` (
 
 LOCK TABLES `item_rate` WRITE;
 /*!40000 ALTER TABLE `item_rate` DISABLE KEYS */;
-INSERT INTO `item_rate` VALUES (1,25,'2023-06-25 09:55:27',1,1),(2,20.56,'2023-06-25 10:34:20',1,2),(3,20.56,'2023-06-25 10:36:50',1,3),(4,29,'2023-07-02 06:35:03',1,1),(5,234,'2023-07-02 06:37:23',1,4),(6,45,'2023-07-02 06:38:33',1,2);
+INSERT INTO `item_rate` VALUES (1,25,'2023-06-25 09:55:27',1,1),(2,20.56,'2023-06-25 10:34:20',1,2),(3,20.56,'2023-06-25 10:36:50',1,3),(4,29,'2023-07-02 06:35:03',1,1),(5,234,'2023-07-02 06:37:23',1,4),(6,45,'2023-07-02 06:38:33',1,2),(7,120,'2023-07-02 07:48:20',1,5);
 /*!40000 ALTER TABLE `item_rate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,11 +120,11 @@ CREATE TABLE `system_user` (
   `EMAIL_ID` varchar(45) NOT NULL,
   `MOBILE_NUMBER` varchar(45) NOT NULL,
   `USERNAME` varchar(45) NOT NULL,
-  `PASSWORD` varchar(100) NOT NULL,
+  `PASSWORD` varchar(500) NOT NULL,
   PRIMARY KEY (`USER_ID`),
   UNIQUE KEY `EMAIL_ID_UNIQUE` (`EMAIL_ID`),
   UNIQUE KEY `USERNAME_UNIQUE` (`USERNAME`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +133,7 @@ CREATE TABLE `system_user` (
 
 LOCK TABLES `system_user` WRITE;
 /*!40000 ALTER TABLE `system_user` DISABLE KEYS */;
-INSERT INTO `system_user` VALUES (1,'prem','prem','rex@test.com','0777728630','prem','112233');
+INSERT INTO `system_user` VALUES (1,'prem','prem','rex@test.com','0777728630','prem','112233'),(2,'kadampan','kadampan','kadampan@gmail.com','0777777234','kadampan','12345678'),(6,'Sumudu','Ghomes','sumudu@test.com','0771234567','sumudu','3572x1712x1742x2012x302x3602x552x3732x1442x2262x72x3352x1352x772x2142x1662x432x42x2142x2342x62x752x1232x542x3112x1342x1362x3272x2502x2302x2462x1172x');
 /*!40000 ALTER TABLE `system_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -309,38 +309,90 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_update_user_detail`(
-IN pUserId int,
-pFirstName VARCHAR(45),
-pLastName VARCHAR(45),
-pEmailAddress VARCHAR(45),
-pMobileNo VARCHAR(45),
-pUsername VARCHAR(45),
-pPassword VARCHAR(45),
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_update_user_detail`(IN pUserId int, IN pFirstName varchar(45),
+                                                                 IN pLastName varchar(45), IN pEmailAddress varchar(45),
+                                                                 IN pMobileNo varchar(45), IN pUsername varchar(45),
+                                                                 IN pPassword varchar(500), OUT rRes tinyint(1),
+                                                                 OUT rMsg varchar(100))
+BEGIN
+    DECLARE lCount INTEGER default 0;
+    DECLARE lEmailCount INTEGER default 0;
+	SET rRes := true;
+    SET rMsg := 'Success';
+
+	select count(*) 
+	    into lCount 
+	from system_user 
+	where lower(USERNAME) = lower(pUsername);
+    
+    select count(*) 
+	    into lEmailCount 
+	from system_user 
+	where lower(EMAIL_ID) = lower(pEmailAddress);
+    
+    
+    IF lCount > 0 and pUserId = 0 then
+        SET rRes := false;
+        SET rMsg := 'Username already exists, please try a different username...!';
+    ELSE
+        IF pUserId = 0 and lCount = 0 and lEmailCount = 0 THEN
+           INSERT INTO system_user
+            (
+            FIRST_NAME,
+            LAST_NAME,
+            EMAIL_ID,
+            MOBILE_NUMBER,
+            USERNAME,
+            PASSWORD)
+            VALUES
+            (pFirstName,pLastName,pEmailAddress,pMobileNo,pUsername,pPassword); 
+        ELSE 
+            Update system_user
+			    set PASSWORD = pPassword
+            where USER_ID = pUserId;
+        END IF;
+    END IF;    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `user_login` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_login`(
+IN pUsername varchar(45),
+IN pPassword varchar(500),
 OUT rRes tinyint(1),
 OUT rMsg varchar(100)
 )
 BEGIN
-	SET rRes := true;
-    SET rMsg := 'Success';
-	IF pUserId = 0 THEN
-		INSERT INTO system_user
-		(
-		FIRST_NAME,
-		LAST_NAME,
-		EMAIL_ID,
-		MOBILE_NUMBER,
-		USERNAME,
-		PASSWORD)
-		VALUES
-		(pFirstName,pLastName,pEmailAddress,pMobileNo,pUsername,pPassword);
-	ELSE
-		Update system_user
-			set PASSWORD = pPassword
-        where USER_ID = pUserId;
-        
-    END IF;
+	DECLARE lCount integer default 0;
     
+    SET rRes := true;
+    SET rMsg := 'Success';
+    
+	select count(*) 
+		into lCount
+    from system_user 
+    where lower(username) = lower(pUsername) 
+    and password = pPassword;
+    
+    IF lCount = 0 THEN
+		SET rRes := false;
+		SET rMsg := 'Username or Password is incorrect, please try again...!';
+	ELSE
+		SET rRes := true;
+		SET rMsg := 'Login Successful...!';
+    END IF;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -357,4 +409,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-02 12:15:58
+-- Dump completed on 2023-07-02 14:49:59
