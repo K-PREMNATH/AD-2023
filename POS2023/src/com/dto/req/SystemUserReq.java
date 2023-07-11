@@ -16,6 +16,16 @@ public class SystemUserReq {
     private String username;
     private String password;
 
+    public SystemUserReq(int userId, String firstName, String lastName, String emailAddress, String mobileNo, String username, String password) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailAddress = emailAddress;
+        this.mobileNo = mobileNo;
+        this.username = username;
+        this.password = password;
+    }
+
     public SystemUserReq() {
     }
 
