@@ -170,24 +170,59 @@ public class RegisterNewUser extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        SystemUserReq systemUserReq = new SystemUserReq(
-                0,
-                jTextField2.getText(), jTextField3.getText(), jTextField1.getText(),
-                jTextField5.getText(), jTextField4.getText(),
-                jPasswordField1.getText()
-        );
-        
-        User user = new User();
-        GeneralResponse response = user.createNewUser(systemUserReq);
-        if(response.isRes()){
-            MainUI mainUI = new MainUI();
-            mainUI.setVisible(true);
-            this.setVisible(false);
-        }else{
-            JOptionPane.showMessageDialog(rootPane, response.getMessage());
+        boolean valid = false;
+        valid = validateField(jTextField2.getText(), "firstName");
+        if (!valid) {
+            JOptionPane.showMessageDialog(rootPane, "firstName" + " field cannot be empty");
+        }
+        valid = validateField(jTextField3.getText(), "lastName");
+        if (!valid) {
+            JOptionPane.showMessageDialog(rootPane, "lastName" + " field cannot be empty");
+        }
+        valid = validateField(jTextField1.getText(), "emailAddress");
+        if (!valid) {
+            JOptionPane.showMessageDialog(rootPane, "emailAddress" + " field cannot be empty");
+        }
+        valid = validateField(jTextField5.getText(), "mobileNo");
+        if (!valid) {
+            JOptionPane.showMessageDialog(rootPane, "mobileNo" + " field cannot be empty");
+        }
+        valid = validateField(jTextField4.getText(), "username");
+        if (!valid) {
+            JOptionPane.showMessageDialog(rootPane, "username" + " field cannot be empty");
+        }
+        valid = validateField(jPasswordField1.getText(), "password");
+        if (!valid) {
+            JOptionPane.showMessageDialog(rootPane, "password" + " field cannot be empty");
+        }
+
+        if (valid) {
+            SystemUserReq systemUserReq = new SystemUserReq(
+                    0,
+                    jTextField2.getText(), jTextField3.getText(), jTextField1.getText(),
+                    jTextField5.getText(), jTextField4.getText(),
+                    jPasswordField1.getText()
+            );
+
+            User user = new User();
+            GeneralResponse response = user.createNewUser(systemUserReq);
+            if (response.isRes()) {
+                MainUI mainUI = new MainUI();
+                mainUI.setVisible(true);
+                this.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, response.getMessage());
+            }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    public boolean validateField(String text, String componentName) {
+        if (text == null || text.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     /**
      * @param args the command line arguments
