@@ -1,6 +1,6 @@
-package com.dto;
+package com.dto.req;
 
-public class UserReq {
+public class UserLoginReq {
     private String username;
     private String password;
 
@@ -22,7 +22,7 @@ public class UserReq {
 
     @Override
     public String toString() {
-        return "UserReq{" +
+        return "UserLoginReq{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

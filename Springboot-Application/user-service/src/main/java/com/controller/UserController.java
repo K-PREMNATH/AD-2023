@@ -1,15 +1,21 @@
 package com.controller;
 
-import com.dto.User;
-import com.dto.UserLoginReq;
-import com.dto.UserLoginRes;
-import com.dto.UserReq;
+import com.business.UserManagement;
+import com.dto.res.GeneralResponse;
+import com.dto.res.User;
+import com.dto.req.UserLoginReq;
+import com.dto.res.UserLoginRes;
+import com.dto.req.UserReq;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
+
+    @Autowired
+    UserManagement userManagement;
 
     @PostMapping("/print/text")
     public void printText(){
@@ -37,15 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public UserLoginRes userLogin(@RequestBody UserLoginReq loginReq){
-        UserLoginRes userLoginRes = new UserLoginRes();
-        if(loginReq.getUsername().equals("prem")){
-            userLoginRes.setStatus(1);
-            userLoginRes.setMessage("success");
-        }else{
-            userLoginRes.setStatus(10);
-            userLoginRes.setMessage("failed to login");
-        }
-        return userLoginRes;
+    public GeneralResponse userLogin(@RequestBody UserLoginReq loginReq){
+        return userManagement.userLogin(loginReq);
     }
 }
