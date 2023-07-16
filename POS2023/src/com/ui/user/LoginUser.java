@@ -6,6 +6,7 @@ import com.db.IUser;
 import com.db.impl.User;
 import com.dto.res.GeneralResponse;
 import com.ui.main.MainUI;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -52,6 +53,12 @@ public class LoginUser extends javax.swing.JFrame {
             }
         });
 
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyPressed(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel1.setText("Password: ");
 
@@ -72,6 +79,11 @@ public class LoginUser extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Cancel");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton2MouseEntered(evt);
+            }
+        });
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -157,11 +169,11 @@ public class LoginUser extends javax.swing.JFrame {
         String Password = jPasswordField1.getText();
         IUser iUser = new User();
         GeneralResponse response = iUser.loginUser(username, Password);
-        if(response.isRes()){
+        if (response.isRes()) {
             MainUI mainUI = new MainUI();
             mainUI.setVisible(true);
             this.setVisible(false);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, response.getMessage());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -170,6 +182,27 @@ public class LoginUser extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            String username = jTextField1.getText();
+            String Password = jPasswordField1.getText();
+            IUser iUser = new User();
+            GeneralResponse response = iUser.loginUser(username, Password);
+            if (response.isRes()) {
+                MainUI mainUI = new MainUI();
+                mainUI.setVisible(true);
+                this.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, response.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jPasswordField1KeyPressed
+
+    private void jButton2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2MouseEntered
 
     /**
      * @param args the command line arguments
