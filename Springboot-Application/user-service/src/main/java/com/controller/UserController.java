@@ -1,16 +1,17 @@
 package com.controller;
 
 import com.business.UserManagement;
+import com.dto.req.UserLoginReq;
+import com.dto.req.UserReq;
 import com.dto.res.GeneralResponse;
 import com.dto.res.User;
-import com.dto.req.UserLoginReq;
-import com.dto.res.UserLoginRes;
-import com.dto.req.UserReq;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
 
