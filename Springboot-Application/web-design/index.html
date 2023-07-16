@@ -232,6 +232,11 @@ function userLogin(){
          data: JSON.stringify(obj),
          success: function (data) {
              console.log(data);
+             if(data.res == false){
+                alert(data.message);
+             }else{
+                alert("Success");
+             }
          }
      });
 }
