@@ -2,10 +2,20 @@ package com.dto.res;
 
 
 public class GeneralResponse {
+
+    private Object value;
     private boolean res;
     private String message;
 
     public GeneralResponse() {
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     public boolean isRes() {

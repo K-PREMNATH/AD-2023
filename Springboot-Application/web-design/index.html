@@ -235,7 +235,9 @@ function userLogin(){
              if(data.res == false){
                 alert(data.message);
              }else{
-                alert("Success");
+
+                localStorage.setItem('lastName',data.value.lastName);
+                window.location.href = "home.html";
              }
          }
      });
