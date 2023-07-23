@@ -69,13 +69,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
         getUserList();
-        // $('#myDataTable').DataTable({
-        //     data: [
-        //         [1, 'John Doe', 30],
-        //         [2, 'Jane Smith', 25],
-                
-        //     ]
-        // });
     });
 $(function(){
     function getLSLastName(){
@@ -106,19 +99,14 @@ function populateUserTable(data){
             }); 
 }
 function getUserList(){
-    var obj = {
-            searchKey: ''
-            };
-
     $.ajax({
-                url: 'http://localhost:9090/get/user/detail/list',
+                url: 'http://localhost:9090/get/users/list',
                 type: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "Access-Control-Allow-Origin": "*"
                 },
                 dataType: 'json',
-                data: JSON.stringify(obj),
                 success: function (data) {
                     console.log(data);
                     populateUserTable(data.value);

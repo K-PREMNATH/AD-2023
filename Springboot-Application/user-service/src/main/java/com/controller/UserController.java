@@ -28,8 +28,8 @@ public class UserController {
         return userManagement.userSignUp(createNewUserReq);
     }
 
-    @PostMapping("/get/user/detail/list")
-    public GeneralResponse getUserDetailList(@RequestBody GetUserDetailReq getUserDetailReq){
-        return  new GeneralResponse(userManagement.getUserDetailList(getUserDetailReq),true,"success");
+    @PostMapping("/get/users/list")
+    public GeneralResponse getUserDetailList(){
+        return  new GeneralResponse(userManagement.getUserDetailList(),true,"success");
     }
 }

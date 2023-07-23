@@ -30,7 +30,7 @@ public class UserManagement {
         return userDAO.userSignUp(createNewUserReq);
     }
 
-    public List<GetUserDetailRes> getUserDetailList(GetUserDetailReq getUserDetailReq) {
-        return userDAO.getUserDetailList(getUserDetailReq);
+    public List<GetUserDetailRes> getUserDetailList() {
+        return userDAO.getUserDetailList();
     }
 }

@@ -30,15 +30,17 @@ public class UserDAO {
             callableStatement = conn.prepareCall(DAOConstant.USER_LOGIN_DETAIL);
             callableStatement.setObject(1, username, Types.VARCHAR);
             callableStatement.setObject(2, password, Types.VARCHAR);
-            callableStatement.registerOutParameter(3, Types.VARCHAR);
-            callableStatement.registerOutParameter(4, Types.BOOLEAN);
-            callableStatement.registerOutParameter(5, Types.VARCHAR);
+            callableStatement.registerOutParameter(3, Types.INTEGER);
+            callableStatement.registerOutParameter(4, Types.VARCHAR);
+            callableStatement.registerOutParameter(5, Types.BOOLEAN);
+            callableStatement.registerOutParameter(6, Types.VARCHAR);
             callableStatement.executeUpdate();
-            generalResponse.setRes((boolean) callableStatement.getObject(4));
-            generalResponse.setMessage((String) callableStatement.getObject(5));
+            generalResponse.setRes((boolean) callableStatement.getObject(5));
+            generalResponse.setMessage((String) callableStatement.getObject(6));
             if(generalResponse.isRes()){
                 LoginResponse loginResponse = new LoginResponse();
-                loginResponse.setLastName((String) callableStatement.getObject(3));
+                loginResponse.setLastName((String) callableStatement.getObject(4));
+                loginResponse.setUserId((Integer) callableStatement.getObject(3));
 
                 generalResponse.setValue(loginResponse);
             }
@@ -91,7 +93,7 @@ public class UserDAO {
         return generalResponse;
     }
 
-    public List<GetUserDetailRes> getUserDetailList(GetUserDetailReq getUserDetailReq) {
+    public List<GetUserDetailRes> getUserDetailList() {
         Connection conn = null;
         CallableStatement callableStatement;
         ResultSet resultSet = null;
@@ -99,7 +101,6 @@ public class UserDAO {
         try {
             conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
             callableStatement = conn.prepareCall(DAOConstant.GET_USER_DETAIL_LIST);
-            callableStatement.setObject(1, getUserDetailReq.getSearchKey(), Types.VARCHAR);
             resultSet = callableStatement.executeQuery();
             while (resultSet.next()){
                 GetUserDetailRes getUserRes = new GetUserDetailRes();
