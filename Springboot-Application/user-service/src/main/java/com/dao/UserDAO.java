@@ -1,17 +1,18 @@
 package com.dao;
 
 import com.dto.req.CreateNewUserReq;
+import com.dto.req.GetUserDetailReq;
 import com.dto.res.GeneralResponse;
+import com.dto.res.GetUserDetailRes;
 import com.dto.res.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class UserDAO {
@@ -61,7 +62,6 @@ public class UserDAO {
         CallableStatement callableStatement;
         try {
             conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
-            callableStatement = conn.prepareCall(DAOConstant.USER_LOGIN_DETAIL);
             callableStatement = conn.prepareCall(DAOConstant.INSERT_UPDATE_USER_DATAIL);
             callableStatement.setObject(1, createNewUserReq.getUserId(), Types.INTEGER);
             callableStatement.setObject(2, createNewUserReq.getFirstName(), Types.VARCHAR);
@@ -89,5 +89,36 @@ public class UserDAO {
         }
 
         return generalResponse;
+    }
+
+    public List<GetUserDetailRes> getUserDetailList(GetUserDetailReq getUserDetailReq) {
+        Connection conn = null;
+        CallableStatement callableStatement;
+        ResultSet resultSet = null;
+        List<GetUserDetailRes> list = new ArrayList<>();
+        try {
+            conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
+            callableStatement = conn.prepareCall(DAOConstant.GET_USER_DETAIL_LIST);
+            callableStatement.setObject(1, getUserDetailReq.getSearchKey(), Types.VARCHAR);
+            resultSet = callableStatement.executeQuery();
+            while (resultSet.next()){
+                GetUserDetailRes getUserRes = new GetUserDetailRes();
+                getUserRes.setUserId(resultSet.getInt("USER_ID"));
+                getUserRes.setFirstName(resultSet.getString("FIRST_NAME"));
+                getUserRes.setLastName(resultSet.getString("LAST_NAME"));
+                getUserRes.setEmailAddress(resultSet.getString("EMAIL_ID"));
+                getUserRes.setMobileNumber(resultSet.getString("MOBILE_NUMBER"));
+                list.add(getUserRes);
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }finally {
+            try {
+                DataSourceUtils.doReleaseConnection(conn,jdbcTemplate.getDataSource());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 }

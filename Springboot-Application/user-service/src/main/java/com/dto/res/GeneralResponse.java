@@ -39,6 +39,12 @@ public class GeneralResponse {
         this.message = message;
     }
 
+    public GeneralResponse(Object value, boolean res, String message) {
+        this.value = value;
+        this.res = res;
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "GeneralResponse{" + "res=" + res + ", message=" + message + '}';

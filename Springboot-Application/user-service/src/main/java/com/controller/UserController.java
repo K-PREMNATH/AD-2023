@@ -2,6 +2,7 @@ package com.controller;
 
 import com.business.UserManagement;
 import com.dto.req.CreateNewUserReq;
+import com.dto.req.GetUserDetailReq;
 import com.dto.req.UserLoginReq;
 import com.dto.res.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,10 @@ public class UserController {
     @PostMapping("/user/signup")
     public GeneralResponse userSignUp(@RequestBody CreateNewUserReq createNewUserReq){
         return userManagement.userSignUp(createNewUserReq);
+    }
+
+    @PostMapping("/get/user/detail/list")
+    public GeneralResponse getUserDetailList(@RequestBody GetUserDetailReq getUserDetailReq){
+        return  new GeneralResponse(userManagement.getUserDetailList(getUserDetailReq),true,"success");
     }
 }
