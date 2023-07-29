@@ -61,7 +61,7 @@ CREATE TABLE `consultant` (
   KEY `consultant_systemuser_UserId_fk` (`UserId`),
   CONSTRAINT `consultant_specialization_fk` FOREIGN KEY (`SpecializationId`) REFERENCES `specialization` (`SpecializationId`),
   CONSTRAINT `consultant_systemuser_UserId_fk` FOREIGN KEY (`UserId`) REFERENCES `systemuser` (`UserId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,6 +70,7 @@ CREATE TABLE `consultant` (
 
 LOCK TABLES `consultant` WRITE;
 /*!40000 ALTER TABLE `consultant` DISABLE KEYS */;
+INSERT INTO `consultant` VALUES (1,1,3);
 /*!40000 ALTER TABLE `consultant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +142,7 @@ CREATE TABLE `jobseeker` (
   PRIMARY KEY (`JobSeekerId`),
   KEY `jobseeker_systemuser_UserId_fk` (`UserId`),
   CONSTRAINT `jobseeker_systemuser_UserId_fk` FOREIGN KEY (`UserId`) REFERENCES `systemuser` (`UserId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,6 +151,7 @@ CREATE TABLE `jobseeker` (
 
 LOCK TABLES `jobseeker` WRITE;
 /*!40000 ALTER TABLE `jobseeker` DISABLE KEYS */;
+INSERT INTO `jobseeker` VALUES (1,2);
 /*!40000 ALTER TABLE `jobseeker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,11 +194,11 @@ CREATE TABLE `systemuser` (
   `EmailAddress` varchar(30) NOT NULL,
   `MobileNumber` varchar(10) NOT NULL,
   `SUPassword` varchar(50) NOT NULL,
-  `UserTypeId` int DEFAULT NULL,
+  `UserTypeId` int NOT NULL,
   PRIMARY KEY (`UserId`),
   KEY `systemuser_usertype_UserTypeId_fk` (`UserTypeId`),
   CONSTRAINT `systemuser_usertype_UserTypeId_fk` FOREIGN KEY (`UserTypeId`) REFERENCES `usertype` (`UserTypeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,6 +207,7 @@ CREATE TABLE `systemuser` (
 
 LOCK TABLES `systemuser` WRITE;
 /*!40000 ALTER TABLE `systemuser` DISABLE KEYS */;
+INSERT INTO `systemuser` VALUES (1,'Prem','Prem','pk@test.com','12345678','11223344',1),(2,'Kada','Kada','kada@test.com','12345678','11223344',3),(3,'Siva','Siva','siva@test.com','12345678','11223344',2);
 /*!40000 ALTER TABLE `systemuser` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,6 +242,71 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'onlineappointmentschedule'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `insert_update_user_detail` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_update_user_detail`(IN pUserId int, IN pFirstName varchar(45),
+                                                                 IN pLastName varchar(45), IN pEmailAddress varchar(45),
+                                                                 IN pMobileNo varchar(45), IN pSUPassword varchar(500),
+                                                                 IN pUserTypeId int, IN pSpecializedId int,
+                                                                 OUT rRes tinyint(1), OUT rStatusCode int,
+                                                                 OUT rMsg varchar(100))
+BEGIN
+	DECLARE lCount INTEGER default 0;
+    DECLARE lEmailCount INTEGER default 0;
+     DECLARE lUserId integer default 0;
+	SET rRes := true;
+    SET rStatusCode  := 0;
+    SET rMsg := 'Success';
+    
+    select count(*) 
+	    into lEmailCount 
+	from systemuser
+	where lower(EmailAddress) = lower(pEmailAddress);
+    
+     IF lEmailCount > 0 and pUserId = 0 then
+        SET rRes := false;
+        SET rStatusCode := 1002;
+        SET rMsg := 'User EmailAddress already exists, please try a different Email Address...!';
+    ELSE
+        IF pUserId = 0 and lCount = 0 and lEmailCount = 0 THEN
+           INSERT INTO systemuser
+						(
+						FirstName,
+						LastName,
+						EmailAddress,
+						MobileNumber,
+						SUPassword,
+						UserTypeId)
+						VALUES
+							(pFirstName,pLastName,pEmailAddress,pMobileNo,pSUPassword,pUserTypeId); 
+                            
+			select LAST_INSERT_ID() into lUserId;
+			IF pUserTypeId = 3 THEN
+				INSERT INTO jobseeker(UserId) VALUES (lUserId);
+            END IF;
+            IF pUserTypeId = 2 THEN
+				INSERT INTO consultant(SpecializationId,UserId) VALUES(pSpecializedId,lUserId);
+            END IF;
+        ELSE 
+            Update systemuser
+			    set SUPassword = pSUPassword
+            where UserId = pUserId;
+        END IF;
+    END IF;    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -249,4 +317,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-29 13:30:39
+-- Dump completed on 2023-07-29 13:58:16
