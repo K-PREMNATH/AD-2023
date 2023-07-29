@@ -2,16 +2,33 @@ package com.dto.user.common.res;
 
 public class CommonResponse {
     public Object value;
+
+    public boolean res;
     public int statusCode;
     public String message;
 
     public CommonResponse() {
     }
 
+    public CommonResponse(Object value, boolean res, int statusCode, String message) {
+        this.value = value;
+        this.res = res;
+        this.statusCode = statusCode;
+        this.message = message;
+    }
+
     public CommonResponse(Object value, int statusCode, String message) {
         this.value = value;
         this.statusCode = statusCode;
         this.message = message;
+    }
+
+    public boolean isRes() {
+        return res;
+    }
+
+    public void setRes(boolean res) {
+        this.res = res;
     }
 
     public Object getValue() {

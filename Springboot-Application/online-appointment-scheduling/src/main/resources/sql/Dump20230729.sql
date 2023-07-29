@@ -142,7 +142,7 @@ CREATE TABLE `jobseeker` (
   PRIMARY KEY (`JobSeekerId`),
   KEY `jobseeker_systemuser_UserId_fk` (`UserId`),
   CONSTRAINT `jobseeker_systemuser_UserId_fk` FOREIGN KEY (`UserId`) REFERENCES `systemuser` (`UserId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +151,7 @@ CREATE TABLE `jobseeker` (
 
 LOCK TABLES `jobseeker` WRITE;
 /*!40000 ALTER TABLE `jobseeker` DISABLE KEYS */;
-INSERT INTO `jobseeker` VALUES (1,2);
+INSERT INTO `jobseeker` VALUES (1,2),(2,4);
 /*!40000 ALTER TABLE `jobseeker` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +198,7 @@ CREATE TABLE `systemuser` (
   PRIMARY KEY (`UserId`),
   KEY `systemuser_usertype_UserTypeId_fk` (`UserTypeId`),
   CONSTRAINT `systemuser_usertype_UserTypeId_fk` FOREIGN KEY (`UserTypeId`) REFERENCES `usertype` (`UserTypeId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `systemuser` (
 
 LOCK TABLES `systemuser` WRITE;
 /*!40000 ALTER TABLE `systemuser` DISABLE KEYS */;
-INSERT INTO `systemuser` VALUES (1,'Prem','Prem','pk@test.com','12345678','11223344',1),(2,'Kada','Kada','kada@test.com','12345678','11223344',3),(3,'Siva','Siva','siva@test.com','12345678','11223344',2);
+INSERT INTO `systemuser` VALUES (1,'Prem','Prem','pk@test.com','12345678','11223344',1),(2,'Kada','Kada','kada@test.com','12345678','11223344',3),(3,'Siva','Siva','siva@test.com','12345678','11223344',2),(4,'Kathir','Prem','prem@test.com','123456789','12345678',3);
 /*!40000 ALTER TABLE `systemuser` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -317,4 +317,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-29 13:58:16
+-- Dump completed on 2023-07-29 14:11:36
