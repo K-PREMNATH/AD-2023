@@ -84,13 +84,13 @@ DROP TABLE IF EXISTS `consultantavailability`;
 CREATE TABLE `consultantavailability` (
   `AvailabilityId` int NOT NULL AUTO_INCREMENT,
   `Day` int NOT NULL,
-  `From` datetime NOT NULL,
-  `To` datetime NOT NULL,
+  `From` time NOT NULL,
+  `To` time NOT NULL,
   `ConsultantId` int NOT NULL,
   PRIMARY KEY (`AvailabilityId`),
   KEY `ConsultantAvailability_consultant_ConsultantId_fk` (`ConsultantId`),
   CONSTRAINT `ConsultantAvailability_consultant_ConsultantId_fk` FOREIGN KEY (`ConsultantId`) REFERENCES `consultant` (`ConsultantId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,6 +99,7 @@ CREATE TABLE `consultantavailability` (
 
 LOCK TABLES `consultantavailability` WRITE;
 /*!40000 ALTER TABLE `consultantavailability` DISABLE KEYS */;
+INSERT INTO `consultantavailability` VALUES (1,1,'06:00:00','10:00:00',1),(2,2,'08:00:00','10:00:00',1),(3,3,'08:00:00','10:00:00',1);
 /*!40000 ALTER TABLE `consultantavailability` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +118,7 @@ CREATE TABLE `consultantdeviation` (
   PRIMARY KEY (`DeviationId`),
   KEY `ConsultantDeviation_consultant_ConsultantId_fk` (`ConsultantId`),
   CONSTRAINT `ConsultantDeviation_consultant_ConsultantId_fk` FOREIGN KEY (`ConsultantId`) REFERENCES `consultant` (`ConsultantId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,6 +127,7 @@ CREATE TABLE `consultantdeviation` (
 
 LOCK TABLES `consultantdeviation` WRITE;
 /*!40000 ALTER TABLE `consultantdeviation` DISABLE KEYS */;
+INSERT INTO `consultantdeviation` VALUES (1,'2023-07-31 07:00:00','2023-07-31 08:00:00',1);
 /*!40000 ALTER TABLE `consultantdeviation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,6 +316,116 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_consultant_availability` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_consultant_availability`(IN pDay int, IN pFrom time, IN pTo time,
+                                                                      IN pUserId int, OUT rRes tinyint(1),
+                                                                      OUT rStatusCode int, OUT rMsg varchar(100))
+BEGIN
+    DECLARE lCount INTEGER default 0;
+    DECLARE lConsultantId INTEGER default 0;
+
+    SET rRes := true;
+    SET rStatusCode := 0;
+    SET rMsg := 'Success';
+
+    select ConsultantId
+    into lConsultantId
+    from consultant
+    where UserId = pUserId;
+
+    IF lConsultantId > 0 THEN
+        #check if a record already exists for a specific day and consultant
+        select count(*)
+        into lCount
+        from consultantavailability
+        where ConsultantId = lConsultantId
+          and Day = pDay;
+
+        IF lCount > 0 THEN
+            update consultantavailability
+            set `From` = pFrom,
+                `To`   = pTo
+            where Day = pDay
+              and ConsultantId = lConsultantId;
+        ELSE
+            insert into consultantavailability
+                (Day, `From`, `To`, ConsultantId)
+            VALUES (pDay, pFrom, pTo, lConsultantId);
+        END IF;
+
+    ELSE
+        IF pDay = 0 THEN
+            SET rRes := false;
+            SET rStatusCode := 1005;
+            SET rMsg := 'Invalid Day Number for the availability setup...!';
+        ELSE
+            SET rRes := false;
+            SET rStatusCode := 1004;
+            SET rMsg := 'Failed to find the consultant detail, please logout and login back...!';
+        END IF;
+
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `update_consultant_deviation` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_consultant_deviation`( IN pFrom datetime,
+                                                                    IN pTo datetime,
+                                                                    IN pUserId int,
+                                                                    OUT rRes tinyint(1),
+                                                                    OUT rStatusCode int,
+                                                                    OUT rMsg varchar(100))
+BEGIN
+    DECLARE lConsultantId INTEGER default 0;
+
+    SET rRes := true;
+    SET rStatusCode := 0;
+    SET rMsg := 'Success';
+
+    select ConsultantId
+    into lConsultantId
+    from consultant
+    where UserId = pUserId;
+
+    IF lConsultantId > 0 THEN
+
+       insert into consultantdeviation(
+                                       `From`,
+                                       `To`,
+                                       ConsultantId)
+       VALUES (pFrom,pTo,lConsultantId);
+    ELSE
+            SET rRes := false;
+            SET rStatusCode := 1004;
+            SET rMsg := 'Failed to find the consultant detail, please logout and login back...!';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `update_consultant_specialization` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -396,4 +508,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-07-30 17:50:57
+-- Dump completed on 2023-07-30 18:29:09
