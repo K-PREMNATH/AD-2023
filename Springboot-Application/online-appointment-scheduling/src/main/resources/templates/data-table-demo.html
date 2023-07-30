@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</head>
+<style>
+    .my-dt {
+        padding: 16px;
+    }
+</style>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+
+    <div class="my-dt">
+        <table id="myDataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>age</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myDataTable').DataTable({
+                data: [
+                    [2, 'Jan', 25],
+                        [2, 'rr', 25],
+                        [2, 'rr', 25],
+                        [2, 'Jan', 25],
+                        [2, 'tt', 25],
+                        [2, 'Jan', 25],
+                        [2, 'ttt', 25],
+                        [2, 'fff', 25],
+                        [2, 'Jan', 25],
+                        [2, 'Jan', 25],
+                        [2, 'gfd', 25],
+                        [2, 'gfg', 25],
+                        [2, 'fgdf', 25],
+
+                    ]
+        });
+        });
+    </script>
+</body>
+
+</html>

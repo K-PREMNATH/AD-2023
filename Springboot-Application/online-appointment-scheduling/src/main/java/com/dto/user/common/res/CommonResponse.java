@@ -58,4 +58,7 @@ public class CommonResponse {
     public static CommonResponse generateResponse(Object value, int statusCode, String message){
         return new CommonResponse(value,statusCode,message);
     }
+    public static CommonResponse generateResponse(Object value, int statusCode, String message,boolean res){
+        return new CommonResponse(value,res,statusCode,message);
+    }
 }

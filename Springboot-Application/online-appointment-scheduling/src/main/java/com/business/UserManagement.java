@@ -3,10 +3,15 @@ package com.business;
 import com.dao.UserDAO;
 import com.dto.user.common.res.CommonResponse;
 import com.dto.user.req.NewConsultantReq;
+import com.dto.user.req.UpdateConsultantReq;
+import com.dto.user.req.UserLoginReq;
+import com.dto.user.res.Specialization;
 import com.service.UserService;
 import com.util.MessageConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -43,5 +48,17 @@ public class UserManagement {
                     MessageConstant.COMMON_EXCEPTION);
         }
         return response;
+    }
+
+    public CommonResponse loginUser(UserLoginReq loginReq) {
+        return userDAO.loginUser(loginReq);
+    }
+
+    public CommonResponse updateConsultantSpecial(UpdateConsultantReq updateConsultantReq) {
+        return userDAO.updateConsultantSpecial(updateConsultantReq);
+    }
+
+    public List<Specialization> getSpecializations() {
+        return userDAO.getSpecializations();
     }
 }

@@ -3,12 +3,16 @@ package com.service;
 import com.business.UserManagement;
 import com.dto.user.common.res.CommonResponse;
 import com.dto.user.req.NewConsultantReq;
+import com.dto.user.req.UpdateConsultantReq;
+import com.dto.user.req.UserLoginReq;
+import com.dto.user.res.Specialization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
@@ -20,7 +24,7 @@ public class UserService {
     UserManagement userManagement;
 
 
-    @PostMapping("/create/user")
+    @PostMapping("/update/user")
     public CommonResponse createUser(@RequestBody NewConsultantReq newUserReq){
         CommonResponse commonResponse = userManagement.createUser(newUserReq);
         return CommonResponse.generateResponse(
@@ -28,4 +32,34 @@ public class UserService {
                 commonResponse.statusCode,
                 commonResponse.message);
     }
+
+    @PostMapping("/login/user")
+    public CommonResponse loginUser(@RequestBody UserLoginReq loginReq){
+        CommonResponse commonResponse = userManagement.loginUser(loginReq);
+        return CommonResponse.generateResponse(
+                commonResponse.value,
+                commonResponse.statusCode,
+                commonResponse.message);
+    }
+
+    @PostMapping("/update/specialization")
+    public CommonResponse updateConsultantSpecial(@RequestBody UpdateConsultantReq updateConsultantReq){
+        CommonResponse commonResponse = userManagement.updateConsultantSpecial(updateConsultantReq);
+        return CommonResponse.generateResponse(
+                commonResponse.value,
+                commonResponse.statusCode,
+                commonResponse.message,
+                commonResponse.res);
+    }
+
+    @PostMapping("/get/specializations")
+    public CommonResponse getSpecializations(){
+        List<Specialization> list  = userManagement.getSpecializations();
+        return CommonResponse.generateResponse(
+                list,
+                0,
+                "success",
+                true);
+    }
+
 }
