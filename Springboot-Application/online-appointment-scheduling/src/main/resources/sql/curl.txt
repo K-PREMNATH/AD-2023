@@ -1,0 +1,32 @@
+curl --location 'http://localhost:9090/oas/update/user' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "userId": 0,
+    "firstName": "Kathir",
+    "lastName": "Prem",
+    "emailAddress": "prem@test.com",
+    "mobileNumber": "123456789",
+    "suPassword": "12345678",
+    "userTypeId": 3
+}'
+
+
+
+curl --location 'http://localhost:9090/oas/login/user' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "emailAddress": "kada@test.com",
+    "userPassword": "11223344"
+}'
+
+
+curl --location 'http://localhost:9090/oas/update/specialization' \
+--header 'Content-Type: application/json' \
+--data '{
+    "userId": 3,
+    "specializationId": 4
+}'
+
+
+
+curl --location --request POST 'http://localhost:9090/oas/get/specializations'
