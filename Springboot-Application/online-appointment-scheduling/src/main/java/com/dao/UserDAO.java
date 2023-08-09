@@ -226,4 +226,38 @@ public class UserDAO {
         }
         return generalResponse;
     }
+
+    public CommonResponse updateConsultantAppointment(UpdateConsultantAppointmentReq updateConsultantAppointmentReq) {
+        CommonResponse generalResponse = new CommonResponse();
+        Connection conn = null;
+        CallableStatement callableStatement;
+        try {
+            logger.info("updateConsultantAppointment------------->"+updateConsultantAppointmentReq.toString());
+            conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
+            callableStatement = conn.prepareCall(DAOConstant.INSERT_CONSULTANT_APPOINTMENT);
+            callableStatement.setObject(1, updateConsultantAppointmentReq.getAppointmentId(), Types.INTEGER);
+            callableStatement.setObject(2, updateConsultantAppointmentReq.getAppointmentDateTime(), Types.VARCHAR);
+            callableStatement.setObject(3, updateConsultantAppointmentReq.getConsultantId(), Types.INTEGER);
+            callableStatement.setObject(4, updateConsultantAppointmentReq.getUserId(), Types.INTEGER);
+            callableStatement.registerOutParameter(5, Types.BOOLEAN);
+            callableStatement.registerOutParameter(6, Types.INTEGER);
+            callableStatement.registerOutParameter(7, Types.VARCHAR);
+
+            callableStatement.executeUpdate();
+
+            generalResponse.setRes((boolean) callableStatement.getObject(5));
+            generalResponse.setStatusCode((Integer) callableStatement.getObject(6));
+            generalResponse.setMessage((String) callableStatement.getObject(7));
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }finally {
+            try {
+                DataSourceUtils.doReleaseConnection(conn,jdbcTemplate.getDataSource());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return generalResponse;
+    }
 }

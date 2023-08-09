@@ -69,4 +69,9 @@ public class UserManagement {
     public CommonResponse updateConsultantDeviation(UpdateConsultantDeviationReq updateConsultantDeviationReq) {
         return userDAO.updateConsultantDeviation(updateConsultantDeviationReq);
     }
+
+    @Transactional
+    public CommonResponse updateConsultantAppointment(UpdateConsultantAppointmentReq updateConsultantAppointmentReq) {
+        return userDAO.updateConsultantAppointment(updateConsultantAppointmentReq);
+    }
 }

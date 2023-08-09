@@ -70,4 +70,8 @@ public class UserService {
         return userManagement.updateConsultantDeviation(updateConsultantDeviationReq);
     }
 
+    @PostMapping("/update/consultant/appointment")
+    public CommonResponse updateConsultantAppointment(@RequestBody UpdateConsultantAppointmentReq updateConsultantAppointmentRe){
+        return userManagement.updateConsultantAppointment(updateConsultantAppointmentRe);
+    }
 }
