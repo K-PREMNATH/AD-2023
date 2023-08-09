@@ -2,9 +2,7 @@ package com.dao;
 
 import com.business.UserManagement;
 import com.dto.user.common.res.CommonResponse;
-import com.dto.user.req.NewConsultantReq;
-import com.dto.user.req.UpdateConsultantReq;
-import com.dto.user.req.UserLoginReq;
+import com.dto.user.req.*;
 import com.dto.user.res.Specialization;
 import com.dto.user.res.UserLoginRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,5 +158,72 @@ public class UserDAO {
             }
         }
         return list;
+    }
+
+    public CommonResponse updateConsultantAvailability(UpdateConsultantAvailabilityReq updateConsultantAvailabilityReq) {
+        CommonResponse generalResponse = new CommonResponse();
+        Connection conn = null;
+        CallableStatement callableStatement;
+        try {
+            logger.info("updateConsultantAvailability------------->"+updateConsultantAvailabilityReq.toString());
+            conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
+            callableStatement = conn.prepareCall(DAOConstant.UPDATE_CONSULTANT_AVAILABILITY);
+            callableStatement.setObject(1, updateConsultantAvailabilityReq.getDayNumber(), Types.INTEGER);
+            callableStatement.setObject(2, updateConsultantAvailabilityReq.getFromTime(), Types.VARCHAR);
+            callableStatement.setObject(3, updateConsultantAvailabilityReq.getToTime(), Types.VARCHAR);
+            callableStatement.setObject(4, updateConsultantAvailabilityReq.getUserId(), Types.INTEGER);
+            callableStatement.registerOutParameter(5, Types.BOOLEAN);
+            callableStatement.registerOutParameter(6, Types.INTEGER);
+            callableStatement.registerOutParameter(7, Types.VARCHAR);
+
+            callableStatement.executeUpdate();
+
+            generalResponse.setRes((boolean) callableStatement.getObject(5));
+            generalResponse.setStatusCode((Integer) callableStatement.getObject(6));
+            generalResponse.setMessage((String) callableStatement.getObject(7));
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }finally {
+            try {
+                DataSourceUtils.doReleaseConnection(conn,jdbcTemplate.getDataSource());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return generalResponse;
+    }
+
+    public CommonResponse updateConsultantDeviation(UpdateConsultantDeviationReq updateConsultantDeviationReq) {
+        CommonResponse generalResponse = new CommonResponse();
+        Connection conn = null;
+        CallableStatement callableStatement;
+        try {
+            logger.info("updateConsultantDeviation------------->"+updateConsultantDeviationReq.toString());
+            conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
+            callableStatement = conn.prepareCall(DAOConstant.UPDATE_CONSULTANT_DEVIATION);
+            callableStatement.setObject(1, updateConsultantDeviationReq.getFromDateTime(), Types.VARCHAR);
+            callableStatement.setObject(2, updateConsultantDeviationReq.getToDateTime(), Types.VARCHAR);
+            callableStatement.setObject(3, updateConsultantDeviationReq.getUserId(), Types.INTEGER);
+            callableStatement.registerOutParameter(4, Types.BOOLEAN);
+            callableStatement.registerOutParameter(5, Types.INTEGER);
+            callableStatement.registerOutParameter(6, Types.VARCHAR);
+
+            callableStatement.executeUpdate();
+
+            generalResponse.setRes((boolean) callableStatement.getObject(4));
+            generalResponse.setStatusCode((Integer) callableStatement.getObject(5));
+            generalResponse.setMessage((String) callableStatement.getObject(6));
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }finally {
+            try {
+                DataSourceUtils.doReleaseConnection(conn,jdbcTemplate.getDataSource());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return generalResponse;
     }
 }

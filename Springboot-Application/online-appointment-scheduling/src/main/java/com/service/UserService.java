@@ -2,9 +2,7 @@ package com.service;
 
 import com.business.UserManagement;
 import com.dto.user.common.res.CommonResponse;
-import com.dto.user.req.NewConsultantReq;
-import com.dto.user.req.UpdateConsultantReq;
-import com.dto.user.req.UserLoginReq;
+import com.dto.user.req.*;
 import com.dto.user.res.Specialization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +58,16 @@ public class UserService {
                 0,
                 "success",
                 true);
+    }
+
+    @PostMapping("/update/consultant/availability")
+    public CommonResponse updateConsultantAvailability(@RequestBody UpdateConsultantAvailabilityReq updateConsultantAvailabilityReq){
+        return userManagement.updateConsultantAvailability(updateConsultantAvailabilityReq);
+    }
+
+    @PostMapping("/update/consultant/deviation")
+    public CommonResponse updateConsultantDeviation(@RequestBody UpdateConsultantDeviationReq updateConsultantDeviationReq){
+        return userManagement.updateConsultantDeviation(updateConsultantDeviationReq);
     }
 
 }

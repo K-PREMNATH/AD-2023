@@ -2,14 +2,13 @@ package com.business;
 
 import com.dao.UserDAO;
 import com.dto.user.common.res.CommonResponse;
-import com.dto.user.req.NewConsultantReq;
-import com.dto.user.req.UpdateConsultantReq;
-import com.dto.user.req.UserLoginReq;
+import com.dto.user.req.*;
 import com.dto.user.res.Specialization;
 import com.service.UserService;
 import com.util.MessageConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -60,5 +59,14 @@ public class UserManagement {
 
     public List<Specialization> getSpecializations() {
         return userDAO.getSpecializations();
+    }
+
+    @Transactional
+    public CommonResponse updateConsultantAvailability(UpdateConsultantAvailabilityReq updateConsultantAvailabilityReq) {
+        return userDAO.updateConsultantAvailability(updateConsultantAvailabilityReq);
+    }
+    @Transactional
+    public CommonResponse updateConsultantDeviation(UpdateConsultantDeviationReq updateConsultantDeviationReq) {
+        return userDAO.updateConsultantDeviation(updateConsultantDeviationReq);
     }
 }

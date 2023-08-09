@@ -2,7 +2,6 @@ package com.dto.user.common.res;
 
 public class CommonResponse {
     public Object value;
-
     public boolean res;
     public int statusCode;
     public String message;

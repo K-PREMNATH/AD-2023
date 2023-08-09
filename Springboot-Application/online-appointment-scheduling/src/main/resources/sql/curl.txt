@@ -30,3 +30,22 @@ curl --location 'http://localhost:9090/oas/update/specialization' \
 
 
 curl --location --request POST 'http://localhost:9090/oas/get/specializations'
+
+curl --location 'http://localhost:9090/oas/update/consultant/availability' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=4B34A6392CA26B84C29D69E3535F4804' \
+--data '{
+    "dayNumber":4,
+    "fromTime":"06:00:00",
+    "toTime":"10:00:00",
+    "userId":3
+}'
+
+curl --location 'http://localhost:9090/oas/update/consultant/deviation' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: JSESSIONID=4B34A6392CA26B84C29D69E3535F4804' \
+--data '{
+    "fromDateTime":"2023-08-31 07:00:00",
+    "toDateTime":"2023-08-31 08:00:00",
+    "userId":3
+}'
