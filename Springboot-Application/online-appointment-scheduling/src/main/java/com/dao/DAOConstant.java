@@ -8,8 +8,9 @@ public class DAOConstant {
 
     public static final String UPDATE_CONSULTANT_AVAILABILITY = "{call update_consultant_availability(?,?,?,?,?,?,?)}";
     public static final String UPDATE_CONSULTANT_DEVIATION = "{call update_consultant_deviation(?,?,?,?,?,?)}";
-
     public static final String INSERT_CONSULTANT_APPOINTMENT = "{call insert_consultant_appointment(?,?,?,?,?,?,?)}";
+
+    public static final String RESET_USER_PASSWORD = "{call reset_user_password(?,?,?,?,?)}";
 
 }
 

@@ -15,7 +15,7 @@
             font-family: 'Mukta', sans-serif;
             height: 100vh;
             min-height: 550px;
-            background-image: url(Free-Wallpaper-Nature-Scenes.jpg);
+            background-image: url(bg-img.jpg);
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
@@ -224,7 +224,7 @@
                 <input id="uname" type="text" placeholder="Email">
                 <input id="upassword" type="password" placeholder="Password">
                 <input type="button" value="Login" onclick="userLogin();">
-                <a href="">Forgot password?</a>
+                <a data-toggle="modal" data-target="#myModal" onclick="resetUserMsgFlag();">Forgot password?</a>
             </div>
             <div class="signup" id="signupDiv">
                 <form id="signupform">
@@ -233,18 +233,16 @@
                         <input id="fName" name="firstName" type="text" placeholder="FirstName">
                         <input id="lName" name="lastName" type="text" placeholder="LastName">
                         <input id="email" name="emailAddress" type="text" placeholder="Email">
-                        <input id="mobile" name="mobileNo" type="text" placeholder="MobileNumber">
-                        <input id="password" name="password" type="password" placeholder="Password">
+                        <input id="mobile" name="mobileNumber" type="text" placeholder="MobileNumber">
+                        <input id="password" name="suPassword" type="password" placeholder="Password">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="userTypeId" name="userTypeId"
-                                value="2">
+                            <input class="form-check-input" type="checkbox" id="userTypeId" name="userTypeId" value="2">
                             <label class="form-check-label" for="userTypeId" style="
                             font-size: 15px;
                             font-family: 'Mukta';
                         "> Consultant</label>
-                        <br>
-                            <input class="form-check-input" type="checkbox" id="userTypeId" name="userTypeId"
-                                value="3">
+                            <br>
+                            <input class="form-check-input" type="checkbox" id="userTypeId" name="userTypeId" value="3">
                             <label class="form-check-label" for="userTypeId" style="
                             font-size: 15px;
                             font-family: 'Mukta';
@@ -272,7 +270,7 @@
             console.log(values);
 
             $.ajax({
-                url: 'http://localhost:9090/user/signup',
+                url: 'http://localhost:9090/oas/update/user',
                 type: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -291,6 +289,10 @@
             });
         });
 
+        function resetUserMsgFlag() {
+            document.getElementById("returnMessage").textContent = "";
+            document.getElementById("userEmailAddress").value = "";
+        }
 
         function userLogin() {
             var uname = document.getElementById("uname").value;
@@ -299,14 +301,14 @@
             console.log(upassword);
 
             var obj = {
-                username: uname,
-                password: upassword
+                emailAddress: uname,
+                userPassword: upassword
             };
 
             console.log(obj);
 
             $.ajax({
-                url: 'http://localhost:9090/user/login',
+                url: 'http://localhost:9090/oas/login/user',
                 type: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -319,10 +321,22 @@
                     if (data.res == false) {
                         alert(data.message);
                     } else {
-
-                        localStorage.setItem('lastName', data.value.lastName);
+                        localStorage.setItem('userTypeId', data.value.userTypeId);
                         localStorage.setItem('userId', data.value.userId);
-                        window.location.href = "home.html";
+                        localStorage.setItem('lastName', data.value.lastName);
+
+                        if (data.value.userTypeId == 1) {
+
+                            window.location.href = "home-admin.html";
+                        }
+
+                        if (data.value.userTypeId == 2) {
+                            window.location.href = "home-jobseeker.html";
+                        }
+
+                        if (data.value.userTypeId == 3) {
+                            window.location.href = "home-consultant.html";
+                        }
                     }
                 }
             });
@@ -360,7 +374,51 @@
         });
 
 
+        function resetPassword() {
+            var uname = document.getElementById("userEmailAddress").value;
+            console.log(uname);
+            var obj = {
+                userEmailAddress: uname
+            };
+
+            console.log(obj);
+
+            $.ajax({
+                url: 'http://localhost:9090/oas/user/reset/password',
+                type: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                dataType: 'json',
+                data: JSON.stringify(obj),
+                success: function (data) {
+                    document.getElementById("returnMessage").textContent = data.message;
+
+                }
+            });
+        }
     </script>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="login-show">
+                        <h2>User Email</h2>
+                        <input id="userEmailAddress" name="userEmailAddress" type="text" placeholder="Email">
+                        <input type="button" value="Reset Password" onclick="resetPassword();">
+                    </div>
+                    <div class="login-show">
+                        <h2 id="returnMessage"></h2>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
 </body>
 
 </html>

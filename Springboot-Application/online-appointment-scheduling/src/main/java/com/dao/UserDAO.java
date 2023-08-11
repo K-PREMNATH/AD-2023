@@ -12,7 +12,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Repository
@@ -248,6 +250,41 @@ public class UserDAO {
             generalResponse.setRes((boolean) callableStatement.getObject(5));
             generalResponse.setStatusCode((Integer) callableStatement.getObject(6));
             generalResponse.setMessage((String) callableStatement.getObject(7));
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }finally {
+            try {
+                DataSourceUtils.doReleaseConnection(conn,jdbcTemplate.getDataSource());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return generalResponse;
+    }
+
+    public CommonResponse resetUserPassword(ResetUserPasswordReq resetUserPasswordReq) {
+        CommonResponse generalResponse = new CommonResponse();
+        Connection conn = null;
+        CallableStatement callableStatement;
+        try {
+            logger.info("resetUserPassword------------->"+resetUserPasswordReq.toString());
+            conn = DataSourceUtils.getConnection(jdbcTemplate.getDataSource());
+            callableStatement = conn.prepareCall(DAOConstant.RESET_USER_PASSWORD);
+            callableStatement.setObject(1, resetUserPasswordReq.getUserEmailAddress(), Types.VARCHAR);
+            callableStatement.registerOutParameter(2, Types.VARCHAR);
+            callableStatement.registerOutParameter(3, Types.BOOLEAN);
+            callableStatement.registerOutParameter(4, Types.INTEGER);
+            callableStatement.registerOutParameter(5, Types.VARCHAR);
+
+            callableStatement.executeUpdate();
+            Map map = new HashMap();
+            map.put("newPassword",(String) callableStatement.getObject(2));
+
+            generalResponse.setValue(map);
+            generalResponse.setRes((boolean) callableStatement.getObject(3));
+            generalResponse.setStatusCode((Integer) callableStatement.getObject(4));
+            generalResponse.setMessage((String) callableStatement.getObject(5));
 
         } catch (SQLException exception) {
             exception.printStackTrace();

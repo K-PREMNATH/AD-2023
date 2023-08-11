@@ -74,4 +74,14 @@ public class UserManagement {
     public CommonResponse updateConsultantAppointment(UpdateConsultantAppointmentReq updateConsultantAppointmentReq) {
         return userDAO.updateConsultantAppointment(updateConsultantAppointmentReq);
     }
+
+    public CommonResponse resetPassword(ResetUserPasswordReq resetPasswordReq) {
+        CommonResponse commonResponse = userDAO.resetUserPassword(resetPasswordReq);
+        if(commonResponse.isRes()){
+            /*Write a function to send email with new password */
+            return CommonResponse.generateResponse(null,commonResponse.statusCode,commonResponse.message,commonResponse.res);
+        }else {
+          return commonResponse;
+        }
+    }
 }

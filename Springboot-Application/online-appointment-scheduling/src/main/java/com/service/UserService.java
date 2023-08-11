@@ -5,16 +5,14 @@ import com.dto.user.common.res.CommonResponse;
 import com.dto.user.req.*;
 import com.dto.user.res.Specialization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/oas")
+@CrossOrigin(origins = "*")
 public class UserService {
     public static final Logger logger = Logger.getLogger(UserService.class.getName());
 
@@ -28,7 +26,8 @@ public class UserService {
         return CommonResponse.generateResponse(
                 commonResponse.value,
                 commonResponse.statusCode,
-                commonResponse.message);
+                commonResponse.message,
+                commonResponse.res);
     }
 
     @PostMapping("/login/user")
@@ -37,7 +36,13 @@ public class UserService {
         return CommonResponse.generateResponse(
                 commonResponse.value,
                 commonResponse.statusCode,
-                commonResponse.message);
+                commonResponse.message,
+                commonResponse.res);
+    }
+
+    @PostMapping("/user/reset/password")
+    public CommonResponse resetPassword(@RequestBody ResetUserPasswordReq resetPasswordReq){
+        return userManagement.resetPassword(resetPasswordReq);
     }
 
     @PostMapping("/update/specialization")
