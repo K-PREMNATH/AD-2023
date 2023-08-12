@@ -240,7 +240,8 @@
                             <label class="form-check-label" for="userTypeId" style="
                             font-size: 15px;
                             font-family: 'Mukta';
-                        "> Consultant</label>
+                        "> Consultant</label> 
+
                             <br>
                             <input class="form-check-input" type="checkbox" id="userTypeId" name="userTypeId" value="3">
                             <label class="form-check-label" for="userTypeId" style="
@@ -330,11 +331,11 @@
                             window.location.href = "home-admin.html";
                         }
 
-                        if (data.value.userTypeId == 2) {
+                        if (data.value.userTypeId == 3) {
                             window.location.href = "home-jobseeker.html";
                         }
 
-                        if (data.value.userTypeId == 3) {
+                        if (data.value.userTypeId == 2) {
                             window.location.href = "home-consultant.html";
                         }
                     }
@@ -419,6 +420,23 @@
             </div>
 
         </div>
+
+        <div class="modal fade" id="modelspecify" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="login-show">
+                            <h2>Select the specification</h2>
+                            <input id="userEmailAddress" name="userEmailAddress" type="text" placeholder="Email">
+                            <input type="button" value="Reset Password" onclick="resetPassword();">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+    
+            </div>
 </body>
 
 </html>

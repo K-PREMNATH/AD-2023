@@ -28,13 +28,14 @@ public class UserManagement {
                 return userDAO.createUser(newUserReq);
             } else if (newUserReq.getUserTypeId() == 2) {
                 /*consultant*/
-                if (newUserReq.getSpecializedId() != 0) {
-                    return userDAO.createUser(newUserReq);
-                } else {
-                    response = new CommonResponse(null,
-                            MessageConstant.SPECIALIZATION_MISSING_CODE,
-                            MessageConstant.SPECIALIZATION_MISSING);
-                }
+                return userDAO.createUser(newUserReq);
+//                if (newUserReq.getSpecializedId() != 0) {
+//                    return userDAO.createUser(newUserReq);
+//                } else {
+//                    response = new CommonResponse(null,
+//                            MessageConstant.SPECIALIZATION_MISSING_CODE,
+//                            MessageConstant.SPECIALIZATION_MISSING);
+//                }
             } else{
                 response = new CommonResponse(null,
                         MessageConstant.COMMON_EXCEPTION_CODE,
